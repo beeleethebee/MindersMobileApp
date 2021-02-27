@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Minders",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "scss", "sass", "svg"]
+    },
+    "slug": "Minders",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo/icon.png",
+    "splash": {
+      "image": "./assets/logo/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#7E85F9"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/logo/favicon.png"
+    }
+  }
+}
