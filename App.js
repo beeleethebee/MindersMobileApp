@@ -1,9 +1,28 @@
 import GetStarted from "components/GetStarted";
+import Register from "components/Register";
+import Login from "components/Login";
 
 import React from "react";
-import { Text, View } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
+
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+
+const Stack = createStackNavigator();
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 10,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#7E85F9",
+    accent: "#011234",
+    placeholder: "#BCBFD2",
+  },
+};
 
 export default (props) => {
   let [fontsLoaded] = useFonts({
@@ -15,9 +34,15 @@ export default (props) => {
     return <AppLoading />;
   } else {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <GetStarted />
-      </View>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Bienvenue" component={GetStarted} />
+            <Stack.Screen name="Inscription" component={Register} />
+            <Stack.Screen name="Connexion" component={Login} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     );
   }
 };

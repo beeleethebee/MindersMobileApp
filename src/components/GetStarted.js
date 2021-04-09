@@ -1,15 +1,23 @@
 import React from "react";
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import Illustration from "assets/images/illustrations/cloud.png";
 import Wave from "assets/images/shapes/wave.png";
 import { Dimensions } from "react-native";
 import colors from "assets/design/colors";
 var width = Dimensions.get("window").width;
 
-export default function GetStarted() {
+export default function GetStarted({ navigation }) {
   return (
-    <View
+    <ScrollView
       style={{
+        backgroundColor: "white",
         flex: 1,
       }}
     >
@@ -23,11 +31,10 @@ export default function GetStarted() {
         </Text>
       </View>
       <Image style={styles.wave} source={Wave} />
-
       <View style={[colors.backgroundPrimary100, styles.bottomView]}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigate("HomeScreen")}
+          onPress={() => navigation.navigate("Inscription")}
           underlayColor="red"
         >
           <Text
@@ -40,7 +47,7 @@ export default function GetStarted() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigate("HomeScreen")}
+          onPress={() => navigation.navigate("Connexion")}
           underlayColor="red"
           style={{ marginTop: 30 }}
         >
@@ -54,7 +61,7 @@ export default function GetStarted() {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -63,16 +70,13 @@ const styles = StyleSheet.create({
     width: width,
     display: "flex",
     alignItems: "center",
-    paddingTop: 80,
+    paddingTop: 40,
     paddingBottom: 100,
   },
   container: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 70,
-    flex: 1,
   },
   illustration: {
     marginTop: 50,
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: 253,
     height: 47,
-    borderRadius: 5,
+    borderRadius: 15,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
