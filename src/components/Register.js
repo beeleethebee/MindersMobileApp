@@ -37,7 +37,13 @@ export default function Register({ navigation }) {
         text2: "Veuillez vérifier vos informations ☁️",
       });
 
-    const data = { firstname, lastname, mail, password, PSYCode };
+    const data = {
+      first_name: firstname,
+      last_name: lastname,
+      email: mail,
+      password: password,
+      PSYCode: PSYCode,
+    };
 
     Registration(data)
       .then(() => {

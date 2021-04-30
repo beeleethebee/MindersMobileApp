@@ -32,7 +32,7 @@ export default function Login() {
         text2: "Il ne manquerai pas quelque chose ? 🤔",
       });
 
-    const data = { mail, password };
+    const data = { email: mail, password: password };
 
     SignIn(data)
       .then(() => {
