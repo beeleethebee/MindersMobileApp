@@ -20,6 +20,7 @@ export default function GetStarted({ navigation }) {
         backgroundColor: "white",
         flex: 1,
       }}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
     >
       <View style={styles.container}>
         <Image style={styles.illustration} source={Illustration} />
@@ -30,36 +31,38 @@ export default function GetStarted({ navigation }) {
           l'application qui vous guide et prend soin de vous ☁ 🤗
         </Text>
       </View>
-      <Image style={styles.wave} source={Wave} />
-      <View style={[colors.backgroundPrimary100, styles.bottomView]}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Inscription")}
-          underlayColor="red"
-        >
-          <Text
-            style={[
-              colors.textPrimary100,
-              { fontSize: 16, fontFamily: "Avenir-demi" },
-            ]}
+      <View>
+        <Image style={styles.wave} source={Wave} />
+        <View style={[colors.backgroundPrimary100, styles.bottomView]}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Inscription")}
+            underlayColor="violet"
           >
-            Commencer l’aventure
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Connexion")}
-          underlayColor="red"
-          style={{ marginTop: 30 }}
-        >
-          <Text
-            style={[
-              colors.textWhite,
-              { fontSize: 16, fontFamily: "Avenir-demi" },
-            ]}
+            <Text
+              style={[
+                colors.textPrimary100,
+                { fontSize: 16, fontFamily: "Avenir-demi" },
+              ]}
+            >
+              Commencer l’aventure
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Connexion")}
+            underlayColor="violet"
+            style={{ marginTop: 30 }}
           >
-            Se connecter
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                colors.textWhite,
+                { fontSize: 16, fontFamily: "Avenir-demi" },
+              ]}
+            >
+              Se connecter
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

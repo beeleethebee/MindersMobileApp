@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -10,10 +10,12 @@ import {
 import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width;
 import Illustration from "assets/images/illustrations/Minders.png";
+import Toast from "react-native-toast-message";
+import { Registration } from "../../API";
 
 import { TextInput } from "react-native-paper";
 
-export default function Register() {
+export default function Register({ navigation }) {
   const [firstname, setFirstname] = React.useState("");
   const [lastname, setLastname] = React.useState("");
 
@@ -21,6 +23,51 @@ export default function Register() {
   const [password, setPassword] = React.useState("");
 
   const [PSYCode, setPSYCode] = React.useState("");
+
+  const sendForm = async () => {
+    if (!firstname || !lastname || !mail || !password)
+      return Toast.show({
+        type: "error",
+        position: "top",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 55,
+        bottomOffset: 40,
+        text1: "Erreur",
+        text2: "Veuillez vérifier vos informations ☁️",
+      });
+
+    const data = { firstname, lastname, mail, password, PSYCode };
+
+    Registration(data)
+      .then(() => {
+        Toast.show({
+          type: "success",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 55,
+          bottomOffset: 40,
+          text1: "Félicitations !",
+          text2: "Bienvenue chez Minders ! 🤗",
+        });
+        navigation.navigate("Bienvenue");
+      })
+      .catch((error) => {
+        console.log(error);
+        return Toast.show({
+          type: "error",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 55,
+          bottomOffset: 40,
+          text1: "Erreur",
+          text2:
+            "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟",
+        });
+      });
+  };
 
   return (
     <ScrollView
@@ -86,7 +133,7 @@ export default function Register() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigate("HomeScreen")}
+          onPress={sendForm}
           underlayColor="red"
         >
           <Text

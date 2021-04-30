@@ -11,12 +11,59 @@ import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width;
 import colors from "assets/design/colors";
 import Illustration from "assets/images/illustrations/Minders.png";
-
+import Toast from "react-native-toast-message";
+import { SignIn } from "../../API";
 import { TextInput } from "react-native-paper";
 
 export default function Login() {
   const [mail, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const sendForm = async ({ navigation }) => {
+    if (!mail || !password)
+      return Toast.show({
+        type: "error",
+        position: "top",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 55,
+        bottomOffset: 40,
+        text1: "Erreur",
+        text2: "Il ne manquerai pas quelque chose ? 🤔",
+      });
+
+    const data = { mail, password };
+
+    SignIn(data)
+      .then(() => {
+        Toast.show({
+          type: "success",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 55,
+          bottomOffset: 40,
+          text1: "Coucou <insérer nom> !",
+          text2: "Content de te voir 🤗",
+        });
+      })
+      .catch((error) => {
+        let textError =
+          "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟";
+        if (error.response.status === 401)
+          textError = "Mauvais identifiants ☹️";
+        return Toast.show({
+          type: "error",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 55,
+          bottomOffset: 40,
+          text1: "Erreur",
+          text2: textError,
+        });
+      });
+  };
 
   return (
     <ScrollView
@@ -71,10 +118,7 @@ export default function Login() {
           Mot de passe oublié ?
         </Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigate("HomeScreen")}
-        >
+        <TouchableOpacity style={styles.button} onPress={sendForm}>
           <Text
             style={[
               {

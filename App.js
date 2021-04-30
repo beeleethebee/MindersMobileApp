@@ -5,6 +5,7 @@ import Login from "components/Login";
 import React from "react";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
+import Toast from "react-native-toast-message";
 
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
@@ -42,6 +43,7 @@ export default (props) => {
             <Stack.Screen name="Connexion" component={Login} />
           </Stack.Navigator>
         </NavigationContainer>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </PaperProvider>
     );
   }
