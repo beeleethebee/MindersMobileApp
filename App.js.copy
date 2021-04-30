@@ -1,0 +1,67 @@
+import React from 'react';
+import { 
+    StyleSheet,
+    SafeAreaView, 
+    StatusBar,
+    Text,
+    TouchableWithoutFeedback 
+} from 'react-native';
+import {BottomPopup} from './src/BottomPopup';
+
+const popuplist = [
+  {
+    id: 1,
+    name: 'Task'
+  },
+  {
+    id: 2,
+    name: 'Note'
+  },
+  {
+    id: 3,
+    name: 'Message'
+  },
+]
+
+const App = () => {
+  let popupRef = React.createRef()
+
+  const onShowPopup = () => {
+    popupRef.show()
+  }
+
+  const onClosePopup = () => {
+    popupRef.close()
+  }
+
+  return (
+
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={styles.container}>
+        <TouchableWithoutFeedback onPress={onShowPopup}>
+          <Text style={styles.txtSize}>Show Popup</Text>
+        </TouchableWithoutFeedback>
+        <BottomPopup
+          title='Demo Popup'
+          ref={(target) => popupRef = target}
+          onTouchOutside={onClosePopup}
+          data={popuplist}
+        />
+      </SafeAreaView>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  txtSize :{
+    fontSize: 20
+  }
+})
+
+export default App;
