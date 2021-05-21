@@ -1,7 +1,8 @@
-import GetStarted from "components/GetStarted";
-import Register from "components/Register";
-import Login from "components/Login";
-import Home from "components/Home";
+import GetStarted from "./src/screens/GetStarted.js";
+import Register from "./src/screens/Register";
+import Login from "./src/screens/Login";
+import Home from "./src/screens/Home";
+import Activity from "./src/screens/Activity";
 
 import React from "react";
 import AppLoading from "expo-app-loading";
@@ -40,6 +41,7 @@ export default () => {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Accueil" component={Home} />
+            <Stack.Screen name="Activités" component={Activity} />
             <Stack.Screen name="Bienvenue" component={GetStarted} />
             <Stack.Screen name="Inscription" component={Register} />
             <Stack.Screen name="Connexion" component={Login} />

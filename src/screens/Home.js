@@ -7,7 +7,7 @@ import {
   View,
   TouchableWithoutFeedback,
 } from "react-native";
-import { BottomPopup } from "./BottomPopUp";
+import { BottomPopup } from "../components/BottomPopUp";
 
 const popuplist = [
   {
@@ -50,11 +50,10 @@ export default function Home() {
           }}
           show={show}
           title="Expliquez nous"
-          ref={(target) => (popupRef = target)}
           onTouchOutside={onClosePopup}
           body={
             <View>
-              <Text>Ok le boss</Text>
+              <Text>Il était quelle heure ?</Text>
             </View>
           }
         />

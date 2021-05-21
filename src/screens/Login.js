@@ -13,12 +13,20 @@ import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
 import { SignIn } from "../../API";
 import { TextInput } from "react-native-paper";
+import { useEffect } from "react";
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [mail, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [isLog, setIsLog] = React.useState(false);
 
-  const sendForm = async ({ navigation }) => {
+  useEffect(() => {
+    if (isLog) {
+      navigation.navigate("ActivityPage");
+    }
+  });
+
+  const sendForm = async () => {
     if (!mail || !password)
       return Toast.show({
         type: "error",
@@ -30,7 +38,6 @@ export default function Login() {
         text1: "Erreur",
         text2: "Il ne manquerai pas quelque chose ? 🤔",
       });
-
     const data = { email: mail, password: password };
 
     SignIn(data)
@@ -45,6 +52,7 @@ export default function Login() {
           text1: "Coucou <insérer nom> !",
           text2: "Content de te voir 🤗",
         });
+        setIsLog(true);
       })
       .catch((error) => {
         let textError =
