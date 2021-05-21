@@ -14,12 +14,21 @@ import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
 import { SignIn } from "../../API";
 import { TextInput } from "react-native-paper";
+import ActivityPage from "./ActivityPage";
+import {useEffect} from "react";
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [mail, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [isLog, setIsLog] = React.useState(false);
 
-  const sendForm = async ({ navigation }) => {
+  useEffect(() => {
+    if (isLog) {
+      navigation.navigate('ActivityPage');
+    }
+  })
+
+  const sendForm = async () => {
     if (!mail || !password)
       return Toast.show({
         type: "error",
@@ -31,7 +40,6 @@ export default function Login() {
         text1: "Erreur",
         text2: "Il ne manquerai pas quelque chose ? 🤔",
       });
-
     const data = { email: mail, password: password };
 
     SignIn(data)
@@ -46,6 +54,7 @@ export default function Login() {
           text1: "Coucou <insérer nom> !",
           text2: "Content de te voir 🤗",
         });
+        setIsLog(true)
       })
       .catch((error) => {
         let textError =
@@ -65,75 +74,75 @@ export default function Login() {
       });
   };
 
-  return (
-    <ScrollView
-      style={{
-        width: width,
-        backgroundColor: "white",
-        flex: 1,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: 45,
-          paddingRight: 45,
-          paddingTop: 60,
-          paddingBottom: 60,
-        }}
+    return (
+      <ScrollView
+          style={{
+            width: width,
+            backgroundColor: "white",
+            flex: 1,
+          }}
       >
-        <Image style={styles.illustration} source={Illustration} />
-        <Text style={styles.welcome}>Bienvenue,</Text>
-        <Text style={styles.tinyText}>Connectez-vous pour continuer</Text>
-
-        <TextInput
-          label="Email"
-          style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
-          value={mail}
-          onChangeText={(mail) => setMail(mail)}
-          mode="outlined"
-        />
-
-        <TextInput
-          label="Mot de passe"
-          secureTextEntry={true}
-          style={{ backgroundColor: "white", marginTop: 15, height: 42 }}
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-          mode="outlined"
-        />
-        <Text
-          style={[
-            {
-              fontSize: 12,
-              fontFamily: "Avenir-demi",
-              color: "#011234",
-              width: "100%",
-              textAlign: "right",
-              marginTop: 10,
-            },
-          ]}
+        <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              paddingLeft: 45,
+              paddingRight: 45,
+              paddingTop: 60,
+              paddingBottom: 60,
+            }}
         >
-          Mot de passe oublié ?
-        </Text>
+          <Image style={styles.illustration} source={Illustration} />
+          <Text style={styles.welcome}>Bienvenue,</Text>
+          <Text style={styles.tinyText}>Connectez-vous pour continuer</Text>
 
-        <TouchableOpacity style={styles.button} onPress={sendForm}>
+          <TextInput
+              label="Email"
+              style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
+              value={mail}
+              onChangeText={(mail) => setMail(mail)}
+              mode="outlined"
+          />
+
+          <TextInput
+              label="Mot de passe"
+              secureTextEntry={true}
+              style={{ backgroundColor: "white", marginTop: 15, height: 42 }}
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+              mode="outlined"
+          />
           <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+              style={[
+                {
+                  fontSize: 12,
+                  fontFamily: "Avenir-demi",
+                  color: "#011234",
+                  width: "100%",
+                  textAlign: "right",
+                  marginTop: 10,
+                },
+              ]}
           >
-            Connexion
+            Mot de passe oublié ?
           </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
+
+          <TouchableOpacity style={styles.button} onPress={sendForm}>
+            <Text
+                style={[
+                  {
+                    fontSize: 16,
+                    fontFamily: "Avenir-demi",
+                    color: "white",
+                  },
+                ]}
+            >
+              Connexion
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({

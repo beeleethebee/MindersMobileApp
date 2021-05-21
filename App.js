@@ -1,6 +1,7 @@
 import GetStarted from "components/GetStarted";
 import Register from "components/Register";
 import Login from "components/Login";
+import ActivityPage from "components/ActivityPage";
 
 import React from "react";
 import AppLoading from "expo-app-loading";
@@ -41,6 +42,7 @@ export default (props) => {
             <Stack.Screen name="Bienvenue" component={GetStarted} />
             <Stack.Screen name="Inscription" component={Register} />
             <Stack.Screen name="Connexion" component={Login} />
+            <Stack.Screen name="ActivityPage" component={ActivityPage} />
           </Stack.Navigator>
         </NavigationContainer>
         <Toast ref={(ref) => Toast.setRef(ref)} />
