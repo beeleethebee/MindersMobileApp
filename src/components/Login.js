@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width;
-import colors from "assets/design/colors";
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
 import { SignIn } from "../../API";

@@ -1,6 +1,7 @@
 import GetStarted from "components/GetStarted";
 import Register from "components/Register";
 import Login from "components/Login";
+import Home from "components/Home";
 
 import React from "react";
 import AppLoading from "expo-app-loading";
@@ -25,7 +26,7 @@ const theme = {
   },
 };
 
-export default (props) => {
+export default () => {
   let [fontsLoaded] = useFonts({
     "Avenir-demi": require("./assets/fonts/AvenirNextRoundedProDemi.ttf"),
     "Avenir-medium": require("./assets/fonts/AvenirNextRoundedProMedium.ttf"),
@@ -38,6 +39,7 @@ export default (props) => {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen name="Accueil" component={Home} />
             <Stack.Screen name="Bienvenue" component={GetStarted} />
             <Stack.Screen name="Inscription" component={Register} />
             <Stack.Screen name="Connexion" component={Login} />
