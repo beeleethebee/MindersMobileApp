@@ -10,7 +10,6 @@ import {
 import styles from "assets/styles/styleActivityPage.js";
 
 export default function Activity({ navigation }) {
-  const [timeLine, setTimeLine] = useState("today");
   return (
     <ScrollView
       style={{

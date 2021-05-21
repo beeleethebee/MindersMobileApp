@@ -7,6 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
+import { ScrollView } from "react-native-gesture-handler";
 
 const deviceHeight = Dimensions.get("window").height;
 
@@ -58,19 +59,20 @@ export function BottomPopup({ title, body, onTouchOutside, show, onClose }) {
         }}
       >
         {renderOutsideTouchable(onTouchOutside)}
-        <View
+        <ScrollView
           style={{
             backgroundColor: "#FFFFFF",
             width: "100%",
+            paddingBottom: 20,
             borderTopRightRadius: 10,
             borderTopLeftRadius: 10,
-            paddingHorizontal: 10,
-            maxHeight: deviceHeight * 0.4,
+            paddingHorizontal: 20,
+            maxHeight: deviceHeight * 0.6,
           }}
         >
           {renderTitle()}
           {body}
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );

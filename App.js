@@ -4,6 +4,8 @@ import Login from "./src/screens/Login";
 import Home from "./src/screens/Home";
 import Activity from "./src/screens/Activity";
 
+import ActivityContainer from "./src/screens/ActivityContainer";
+
 import React from "react";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
@@ -40,7 +42,7 @@ export default () => {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Accueil" component={Home} />
+            <Stack.Screen name="Accueil" component={ActivityContainer} />
             <Stack.Screen name="Activités" component={Activity} />
             <Stack.Screen name="Bienvenue" component={GetStarted} />
             <Stack.Screen name="Inscription" component={Register} />
