@@ -3,10 +3,11 @@ import Register from "./src/screens/Register";
 import Login from "./src/screens/Login";
 import Home from "./src/screens/Home";
 import Activity from "./src/screens/Activity";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ActivityContainer from "./src/screens/ActivityContainer";
-
 import React from "react";
+
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Toast from "react-native-toast-message";
@@ -29,11 +30,13 @@ const theme = {
   },
 };
 
-export default () => {
+export default ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     "Avenir-demi": require("./assets/fonts/AvenirNextRoundedProDemi.ttf"),
     "Avenir-medium": require("./assets/fonts/AvenirNextRoundedProMedium.ttf"),
   });
+
+  const accessToken = AsyncStorage.getItem("@access-token");
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -42,9 +45,12 @@ export default () => {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Accueil" component={ActivityContainer} />
+            {accessToken ? (
+              <Stack.Screen name="Accueil" component={ActivityContainer} />
+            ) : (
+              <Stack.Screen name="Bienvenue" component={GetStarted} />
+            )}
             <Stack.Screen name="Activités" component={Activity} />
-            <Stack.Screen name="Bienvenue" component={GetStarted} />
             <Stack.Screen name="Inscription" component={Register} />
             <Stack.Screen name="Connexion" component={Login} />
           </Stack.Navigator>

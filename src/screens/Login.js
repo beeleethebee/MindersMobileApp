@@ -11,7 +11,7 @@ import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width;
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { SignIn } from "../../API";
+import { SignIn, getEntries } from "../../API";
 import { TextInput } from "react-native-paper";
 import { useEffect } from "react";
 
@@ -24,7 +24,7 @@ export default function Login({ navigation }) {
     if (isLog) {
       navigation.navigate("ActivityPage");
     }
-  });
+  }, [isLog]);
 
   const sendForm = async () => {
     if (!mail || !password)
