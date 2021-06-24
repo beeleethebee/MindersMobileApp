@@ -53,3 +53,21 @@ export async function getEntries() {
   });
   return rep;
 }
+
+export async function postEntries(data) {
+  const header = await getHeader();
+  let rep = {};
+  await api.post("entries", data, header).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}
+
+export async function deleteEntry(id) {
+  const header = await getHeader();
+  let rep = {};
+  await api.delete(`entries/${id}`, header).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}

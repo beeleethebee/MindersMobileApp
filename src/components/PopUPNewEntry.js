@@ -3,6 +3,7 @@ import { BottomPopup } from "../components/BottomPopUp";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
 import { Chip } from "react-native-paper";
+import { postEntries } from "../../API";
 import {
   StyleSheet,
   SafeAreaView,
@@ -12,13 +13,38 @@ import {
   View,
   TouchableWithoutFeedback,
 } from "react-native";
-export default function PopUPNewEntry({ show, setShow, onClosePopup }) {
-  const [date, setDate] = useState(new Date(1598051730000));
+import moment from "moment";
+
+export default function PopUPNewEntry({
+  show,
+  setShow,
+  onClosePopup,
+  getEntries,
+}) {
+  const [context, setContext] = useState("");
+  const [location, setLocation] = useState("");
+  const [date, setDate] = useState(new Date());
+
   const onChange = (event, selectedDate) => {
+    console.log(selectedDate);
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
+
+  const newEntry = async () => {
+    let dateTime = moment(date).format("DD/MM/YYYY HH:mm");
+    const data = new FormData();
+    data.append("context", context);
+    data.append("time", dateTime);
+    data.append("location", location);
+
+    postEntries(data).then((data) => {
+      getEntries();
+      setShow(false);
+    });
+  };
+
   return (
     <BottomPopup
       onClose={() => {
@@ -41,12 +67,18 @@ export default function PopUPNewEntry({ show, setShow, onClosePopup }) {
           />
           <Text style={styles.title}>Où étiez-vous ?</Text>
           <TextInput
+            onChangeText={(value) => {
+              setLocation(value);
+            }}
             placeholder="Ex : Chez de la famille"
             style={{ backgroundColor: "white", height: 42 }}
             mode="outlined"
           />
           <Text style={styles.title}>Que s’est-il passé ?</Text>
           <TextInput
+            onChangeText={(value) => {
+              setContext(value);
+            }}
             placeholder="Ex: Déjeuner de famille chez mamie.."
             style={{
               backgroundColor: "white",
@@ -124,7 +156,7 @@ export default function PopUPNewEntry({ show, setShow, onClosePopup }) {
               +
             </Chip>
           </View>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={newEntry} style={styles.button}>
             <Text
               style={[
                 {
