@@ -1,39 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BottomPopup } from "../components/BottomPopUp";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
 import { Chip } from "react-native-paper";
-import { postEntries } from "../../API";
-import {
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import moment from "moment";
+import { postEntries, putEntries } from "../../API";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import moment from "moment-timezone";
+
+moment.tz.setDefault("Europe/Paris");
+moment().locale("fr");
 
 export default function PopUPNewEntry({
   show,
   setShow,
   onClosePopup,
   getEntries,
+  entryToEdit,
 }) {
   const [context, setContext] = useState("");
   const [location, setLocation] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    setContext(entryToEdit ? entryToEdit.context : "");
+    setLocation(entryToEdit ? entryToEdit.location : "");
+    setDate(entryToEdit ? moment(entryToEdit.time).unix() : new Date());
+    let date = null;
+    let month = null;
+    let year = null;
+    let hour = null;
+    let minute = null;
+    if (entryToEdit) {
+      date = moment(entryToEdit.time).format("DD");
+      month = moment(entryToEdit.time).format("MM");
+      year = moment(entryToEdit.time).format("YYYY");
+      hour = entryToEdit.time.split("T")[1].split(":")[0];
+      minute = moment(entryToEdit.time).format("mm");
+      let dateTime = new Date(date, month, year, hour, minute);
+      setDate(dateTime);
+    }
+  }, [entryToEdit]);
 
   const onChange = (event, selectedDate) => {
-    console.log(selectedDate);
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
 
   const newEntry = async () => {
-    let dateTime = moment(date).format("DD/MM/YYYY HH:mm");
+    let dateTime = moment(date).format("DD/MM/YYYY  ");
     const data = new FormData();
     data.append("context", context);
     data.append("time", dateTime);
@@ -45,6 +60,20 @@ export default function PopUPNewEntry({
     });
   };
 
+  const changeEntry = async () => {
+    let dateTime = moment(date).format("DD/MM/YYYY HH:mm");
+    const data = new FormData();
+    data.append("context", context);
+    data.append("time", dateTime);
+    data.append("location", location);
+
+    putEntries(entryToEdit.id, data).then((data) => {
+      getEntries();
+      setShow(false);
+    });
+  };
+
+  console.log(date);
   return (
     <BottomPopup
       onClose={() => {
@@ -70,6 +99,7 @@ export default function PopUPNewEntry({
             onChangeText={(value) => {
               setLocation(value);
             }}
+            value={location}
             placeholder="Ex : Chez de la famille"
             style={{ backgroundColor: "white", height: 42 }}
             mode="outlined"
@@ -79,6 +109,7 @@ export default function PopUPNewEntry({
             onChangeText={(value) => {
               setContext(value);
             }}
+            value={context}
             placeholder="Ex: Déjeuner de famille chez mamie.."
             style={{
               backgroundColor: "white",
@@ -156,7 +187,12 @@ export default function PopUPNewEntry({
               +
             </Chip>
           </View>
-          <TouchableOpacity onPress={newEntry} style={styles.button}>
+          <TouchableOpacity
+            onPress={() => {
+              entryToEdit ? changeEntry() : newEntry();
+            }}
+            style={styles.button}
+          >
             <Text
               style={[
                 {

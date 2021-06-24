@@ -63,6 +63,15 @@ export async function postEntries(data) {
   return rep;
 }
 
+export async function putEntries(id, data) {
+  const header = await getHeader();
+  let rep = {};
+  await api.put(`entries/${id}`, data, header).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}
+
 export async function deleteEntry(id) {
   const header = await getHeader();
   let rep = {};

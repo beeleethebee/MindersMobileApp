@@ -10,9 +10,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import moment from "moment";
 
 export default function Home() {
   const [show, setShow] = useState(false);
+  const [entryToEdit, setEntryToEdit] = useState(null);
 
   const [entries, setEntries] = useState([]);
 
@@ -45,12 +47,19 @@ export default function Home() {
       <StatusBar barStyle="dark-content" />
       <ScrollView style={styles.container}>
         {entries.map((entry, i) => {
-          console.log(entry, i);
+          const hour = entry.time
+            .split("T")[1]
+            .split(":")
+            .slice(0, 2)
+            .join(":");
+
           return (
             <View style={styles.card} key={i}>
               <Text>{entry.context}</Text>
               <Text>{entry.location}</Text>
-              <Text>{entry.created_at}</Text>
+              <Text>
+                {moment(entry.time).format("DD/MM/YYYY [at] ") + hour}
+              </Text>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
@@ -67,6 +76,25 @@ export default function Home() {
                   ]}
                 >
                   Supprimer
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setEntryToEdit(entry);
+                  setShow(true);
+                }}
+              >
+                <Text
+                  style={[
+                    {
+                      fontSize: 16,
+                      fontFamily: "Avenir-demi",
+                      color: "white",
+                    },
+                  ]}
+                >
+                  Modifier
                 </Text>
               </TouchableOpacity>
             </View>
@@ -92,6 +120,7 @@ export default function Home() {
           getEntries={getValues}
           show={show}
           setShow={setShow}
+          entryToEdit={entryToEdit}
           onClosePopup={onClosePopup}
         />
       </SafeAreaView>
