@@ -41,9 +41,8 @@ export default ({ navigation }) => {
 
   validateToken().then((isLogged) => {
     setLogged(isLogged);
+    console.log(isLogged, " baba");
   });
-
-  //TODO : valider les tokens
 
   if (!fontsLoaded) {
     return <AppLoading />;

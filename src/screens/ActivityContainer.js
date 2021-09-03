@@ -1,7 +1,7 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import Home from "./Home";
-import Login from "./Login";
+import Scanner from "./Scanner";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -13,7 +13,7 @@ export default function Nav() {
       barStyle={{ backgroundColor: "#ECEDFF" }}
     >
       <Tab.Screen name="Mon journal" component={Home} />
-      <Tab.Screen name="Connexion" component={Login} />
+      <Tab.Screen name="Lier un professionnel" component={Scanner} />
     </Tab.Navigator>
   );
 }

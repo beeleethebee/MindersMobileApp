@@ -23,6 +23,15 @@ const getHeader = async () => {
   };
 };
 
+export async function showTherapist(id) {
+  const header = await getHeader();
+  let rep = {};
+  await api.get(`therapists/${id}`).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}
+
 export async function SignIn(data) {
   let rep = {};
   await api.post("auth/sign_in", data).then((response) => {
@@ -57,6 +66,7 @@ export async function getCategories() {
 }
 
 export async function validateToken() {
+  console.log("BOUBOU");
   const header = await getHeader();
   let rep = {};
   await api
