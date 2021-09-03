@@ -35,9 +35,6 @@ export default function Activity({ navigation }) {
           </View>
         </View>
       </View>
-      <View>
-        <Text>LE BAS DE BAGE TA MERE</Text>
-      </View>
     </ScrollView>
   );
 }

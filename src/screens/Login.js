@@ -21,9 +21,7 @@ export default function Login({ navigation }) {
   const [isLog, setIsLog] = React.useState(false);
 
   useEffect(() => {
-    if (isLog) {
-      navigation.navigate("ActivityPage");
-    }
+    if (isLog) navigation.navigate("Accueil");
   }, [isLog]);
 
   const sendForm = async () => {
@@ -49,10 +47,11 @@ export default function Login({ navigation }) {
           autoHide: true,
           topOffset: 55,
           bottomOffset: 40,
-          text1: "Coucou <insérer nom> !",
+          text1: "Binevenue,",
           text2: "Content de te voir 🤗",
         });
         setIsLog(true);
+        navigation.navigate("Accueil");
       })
       .catch((error) => {
         let textError =

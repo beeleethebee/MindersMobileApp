@@ -1,6 +1,6 @@
 import PopUPNewEntry from "components/PopUPNewEntry";
 import React, { useState, useEffect } from "react";
-import { getEntries, deleteEntry } from "../../API";
+import { getEntries, deleteEntry, getCategories } from "../../API";
 import {
   StyleSheet,
   SafeAreaView,
@@ -17,6 +17,14 @@ export default function Home() {
   const [entryToEdit, setEntryToEdit] = useState(null);
 
   const [entries, setEntries] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const getCat = async () => {
+    getCategories().then((data) => {
+      console.log(data);
+      setCategories(data);
+    });
+  };
 
   const onShowPopup = () => {
     setShow(true);
@@ -40,6 +48,7 @@ export default function Home() {
 
   useEffect(() => {
     getValues();
+    getCat();
   }, []);
 
   return (
@@ -117,6 +126,8 @@ export default function Home() {
           </Text>
         </TouchableOpacity>
         <PopUPNewEntry
+          setCategories={setCategories}
+          categories={categories}
           getEntries={getValues}
           show={show}
           setShow={setShow}

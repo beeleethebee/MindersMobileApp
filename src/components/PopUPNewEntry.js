@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BottomPopup } from "../components/BottomPopUp";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput } from "react-native-paper";
-import { Chip } from "react-native-paper";
+import { TextInput, Chip } from "react-native-paper";
 import { postEntries, putEntries } from "../../API";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import moment from "moment-timezone";
+import PopUPNewCategory from "./PopUpNewCategory";
 
 moment.tz.setDefault("Europe/Paris");
 moment().locale("fr");
@@ -16,10 +16,15 @@ export default function PopUPNewEntry({
   onClosePopup,
   getEntries,
   entryToEdit,
+  categories,
+  setCategories,
 }) {
   const [context, setContext] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
+  const [tagID, setTagID] = useState([]);
+
+  const [showCreateNewCategory, setShowCreateNewCategory] = useState(false);
 
   useEffect(() => {
     setContext(entryToEdit ? entryToEdit.context : "");
@@ -38,6 +43,7 @@ export default function PopUPNewEntry({
       minute = moment(entryToEdit.time).format("mm");
       let dateTime = new Date(date, month, year, hour, minute);
       setDate(dateTime);
+      setTagID(entryToEdit.categories.map((x) => x.id));
     }
   }, [entryToEdit]);
 
@@ -48,32 +54,45 @@ export default function PopUPNewEntry({
   };
 
   const newEntry = async () => {
-    let dateTime = moment(date).format("DD/MM/YYYY  ");
-    const data = new FormData();
-    data.append("context", context);
-    data.append("time", dateTime);
-    data.append("location", location);
-
-    postEntries(data).then((data) => {
+    let dateTime = moment(date).format("DD/MM/YYYY");
+    const data = {
+      context: context,
+      time: dateTime,
+      location: location,
+      category_ids: tagID,
+    };
+    postEntries(data).then(() => {
       getEntries();
       setShow(false);
+      setTagID([]);
+      setContext("");
+      setLocation("");
     });
   };
 
   const changeEntry = async () => {
     let dateTime = moment(date).format("DD/MM/YYYY HH:mm");
-    const data = new FormData();
-    data.append("context", context);
-    data.append("time", dateTime);
-    data.append("location", location);
-
+    const data = {
+      context: context,
+      time: dateTime,
+      location: location,
+      category_ids: tagID,
+    };
     putEntries(entryToEdit.id, data).then((data) => {
       getEntries();
       setShow(false);
     });
   };
 
-  console.log(date);
+  const manageCategory = (category) => {
+    if (tagID.includes(category.id)) {
+      const tagIDCopy = [...tagID];
+      const index = tagIDCopy.indexOf(category.id);
+      if (index > -1) tagIDCopy.splice(index, 1);
+      setTagID([...tagIDCopy]);
+    } else setTagID([...tagID, category.id]);
+  };
+
   return (
     <BottomPopup
       onClose={() => {
@@ -129,60 +148,25 @@ export default function PopUPNewEntry({
               flexWrap: "wrap",
             }}
           >
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Pervers
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Tristesse
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Obsession
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Confort
-            </Chip>
+            {categories.map((category, i) => (
+              <Chip
+                key={i}
+                style={styles.chip}
+                selected={tagID.includes(category.id)}
+                textStyle={styles.chipText}
+                selectedColor={"purple"}
+                onPress={() => {
+                  manageCategory(category);
+                }}
+              >
+                {category.name}
+              </Chip>
+            ))}
 
             <Chip
               style={styles.chip}
               textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Voyage
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Blessure
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
-            >
-              Souvenirs
-            </Chip>
-            <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => console.log("Pressed")}
+              onPress={() => setShowCreateNewCategory(true)}
             >
               +
             </Chip>
@@ -205,6 +189,15 @@ export default function PopUPNewEntry({
               Ajouter
             </Text>
           </TouchableOpacity>
+          <PopUPNewCategory
+            categories={categories}
+            setCategories={setCategories}
+            show={showCreateNewCategory}
+            setShow={setShowCreateNewCategory}
+            onClosePopup={() => {
+              setShowCreateNewCategory(false);
+            }}
+          />
         </View>
       }
     />

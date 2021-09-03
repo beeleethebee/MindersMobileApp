@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/",
+  baseURL: "https://studygrock.ngrok.io/api/",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",
@@ -26,7 +26,6 @@ const getHeader = async () => {
 export async function SignIn(data) {
   let rep = {};
   await api.post("auth/sign_in", data).then((response) => {
-    // console.log(response.headers["access-token"]); // client // uid
     rep = response.data;
     try {
       AsyncStorage.setItem("@access-token", response.headers["access-token"]);
@@ -36,6 +35,38 @@ export async function SignIn(data) {
       console.log(error);
     }
   });
+  return rep;
+}
+
+export async function newCategory(data) {
+  const header = await getHeader();
+  let rep = {};
+  await api.post("categories/", data, header).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}
+
+export async function getCategories() {
+  const header = await getHeader();
+  let rep = {};
+  await api.get("categories/", header).then((response) => {
+    rep = response.data;
+  });
+  return rep;
+}
+
+export async function validateToken() {
+  const header = await getHeader();
+  let rep = {};
+  await api
+    .get("auth/validate_token", header)
+    .then((response) => {
+      rep = response.data.success;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   return rep;
 }
 
@@ -57,9 +88,14 @@ export async function getEntries() {
 export async function postEntries(data) {
   const header = await getHeader();
   let rep = {};
-  await api.post("entries", data, header).then((response) => {
-    rep = response.data;
-  });
+  await api
+    .post("entries", data, header)
+    .then((response) => {
+      rep = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   return rep;
 }
 
