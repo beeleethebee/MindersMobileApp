@@ -26,7 +26,7 @@ const getHeader = async () => {
 export async function showTherapist(id) {
   const header = await getHeader();
   let rep = {};
-  await api.get(`therapists/${id}`).then((response) => {
+  await api.get(`therapists/${id}`, header).then((response) => {
     rep = response.data;
   });
   return rep;
@@ -43,6 +43,15 @@ export async function SignIn(data) {
     } catch (error) {
       console.log(error);
     }
+  });
+  return rep;
+}
+
+export async function addTherapist(id) {
+  const header = await getHeader();
+  let rep = {};
+  await api.get(`therapists/${id}/add`, header).then((response) => {
+    rep = response.data;
   });
   return rep;
 }

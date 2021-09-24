@@ -16,7 +16,6 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { validateToken } from "./API.js";
 
 const Stack = createStackNavigator();
 
@@ -31,17 +30,10 @@ const theme = {
   },
 };
 
-export default ({ navigation }) => {
-  const [logged, setLogged] = useState(false);
-
+export default () => {
   let [fontsLoaded] = useFonts({
     "Avenir-demi": require("./assets/fonts/AvenirNextRoundedProDemi.ttf"),
     "Avenir-medium": require("./assets/fonts/AvenirNextRoundedProMedium.ttf"),
-  });
-
-  validateToken().then((isLogged) => {
-    setLogged(isLogged);
-    console.log(isLogged, " baba");
   });
 
   if (!fontsLoaded) {
@@ -51,11 +43,8 @@ export default ({ navigation }) => {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
-            {logged ? (
-              <Stack.Screen name="Accueil" component={ActivityContainer} />
-            ) : (
-              <Stack.Screen name="Bienvenue" component={GetStarted} />
-            )}
+            <Stack.Screen name="Bienvenue" component={GetStarted} />
+            <Stack.Screen name="Accueil" component={ActivityContainer} />
             <Stack.Screen name="Activités" component={Activity} />
             <Stack.Screen name="Inscription" component={Register} />
             <Stack.Screen name="Connexion" component={Login} />

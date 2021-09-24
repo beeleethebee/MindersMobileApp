@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -11,9 +11,17 @@ import Illustration from "assets/images/illustrations/cloud.png";
 import Wave from "assets/images/shapes/wave.png";
 import { Dimensions } from "react-native";
 import colors from "assets/design/colors";
+import { validateToken } from "../../API.js";
 var width = Dimensions.get("window").width;
 
 export default function GetStarted({ navigation }) {
+  useEffect(() => {
+    validateToken().then((isLogged) => {
+      console.log(isLogged, "baba");
+      if (isLogged) navigation.navigate("Accueil");
+    });
+  }, []);
+
   return (
     <ScrollView
       style={{

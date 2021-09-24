@@ -11,7 +11,7 @@ import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width;
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { SignIn, getEntries } from "../../API";
+import { SignIn } from "../../API";
 import { TextInput } from "react-native-paper";
 import { useEffect } from "react";
 
