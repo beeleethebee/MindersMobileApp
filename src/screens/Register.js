@@ -1,21 +1,15 @@
 import React from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Dimensions } from "react-native";
-var width = Dimensions.get("window").width;
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { Registration } from "../../API";
+import {Registration} from "../api/API";
 
-import { TextInput } from "react-native-paper";
+import {TextInput} from "react-native-paper";
+import {ErrorToast, SuccessToast} from "../components/Toats";
 
-export default function Register({ navigation }) {
+const { width } = Dimensions.get("window");
+
+export default function Register({navigation}) {
   const [firstname, setFirstname] = React.useState("");
   const [lastname, setLastname] = React.useState("");
 
@@ -27,13 +21,7 @@ export default function Register({ navigation }) {
   const sendForm = async () => {
     if (!firstname || !lastname || !mail || !password)
       return Toast.show({
-        type: "error",
-        position: "top",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 55,
-        bottomOffset: 40,
-        text1: "Erreur",
+        ...ErrorToast,
         text2: "Veuillez vérifier vos informations ☁️",
       });
 
@@ -41,121 +29,107 @@ export default function Register({ navigation }) {
       first_name: firstname,
       last_name: lastname,
       email: mail,
-      password: password,
+      password,
       PSYCode: PSYCode,
     };
 
     Registration(data)
-      .then(() => {
-        Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Félicitations !",
-          text2: "Bienvenue chez Minders ! 🤗",
+        .then(() => {
+          Toast.show({
+            ...SuccessToast,
+            text1: "Félicitations !",
+            text2: "Bienvenue chez Minders ! 🤗",
+          });
+          navigation.navigate("Bienvenue");
+        })
+        .catch((error) => {
+          console.log(error);
+          return Toast.show({
+            ...ErrorToast,
+            text2: "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟",
+          });
         });
-        navigation.navigate("Bienvenue");
-      })
-      .catch((error) => {
-        console.log(error);
-        return Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Erreur",
-          text2:
-            "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟",
-        });
-      });
   };
 
   return (
-    <ScrollView
-      style={{
-        width: width,
-        backgroundColor: "white",
-        flex: 1,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: 45,
-          paddingRight: 45,
-          paddingTop: 60,
-          paddingBottom: 60,
-        }}
+      <ScrollView
+          style={{
+            width: width,
+            backgroundColor: "white",
+            flex: 1,
+          }}
       >
-        <Image style={styles.illustration} source={Illustration} />
-        <Text style={styles.welcome}>Bienvenue,</Text>
-        <Text style={styles.tinyText}>Inscrivez-vous pour continuer</Text>
-
-        <TextInput
-          label="Prénom"
-          style={{ backgroundColor: "white", height: 42 }}
-          value={firstname}
-          onChangeText={(firstname) => setFirstname(firstname)}
-          mode="outlined"
-        />
-        <TextInput
-          label="Nom"
-          style={{ backgroundColor: "white", marginTop: 15, height: 42 }}
-          value={lastname}
-          onChangeText={(lastname) => setLastname(lastname)}
-          mode="outlined"
-        />
-
-        <TextInput
-          label="Email"
-          style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
-          value={mail}
-          onChangeText={(mail) => setMail(mail)}
-          mode="outlined"
-        />
-
-        <TextInput
-          label="Mot de passe"
-          secureTextEntry={true}
-          style={{ backgroundColor: "white", marginTop: 15, height: 42 }}
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-          mode="outlined"
-        />
-
-        <TextInput
-          label="Code PSY (optionnel)"
-          style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
-          value={PSYCode}
-          onChangeText={(PSYCode) => setPSYCode(PSYCode)}
-          mode="outlined"
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={sendForm}
-          underlayColor="red"
+        <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              paddingLeft: 45,
+              paddingRight: 45,
+              paddingTop: 60,
+              paddingBottom: 60,
+            }}
         >
-          <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+          <Image style={styles.illustration} source={Illustration}/>
+          <Text style={styles.welcome}>Bienvenue,</Text>
+          <Text style={styles.tinyText}>Inscrivez-vous pour continuer</Text>
+
+          <TextInput
+              label="Prénom"
+              style={{backgroundColor: "white", height: 42}}
+              value={firstname}
+              onChangeText={(firstname) => setFirstname(firstname)}
+              mode="outlined"
+          />
+          <TextInput
+              label="Nom"
+              style={{backgroundColor: "white", marginTop: 15, height: 42}}
+              value={lastname}
+              onChangeText={(lastname) => setLastname(lastname)}
+              mode="outlined"
+          />
+
+          <TextInput
+              label="Email"
+              style={{backgroundColor: "white", marginTop: 40, height: 42}}
+              value={mail}
+              onChangeText={(mail) => setMail(mail)}
+              mode="outlined"
+          />
+
+          <TextInput
+              label="Mot de passe"
+              secureTextEntry={true}
+              style={{backgroundColor: "white", marginTop: 15, height: 42}}
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+              mode="outlined"
+          />
+
+          <TextInput
+              label="Code PSY (optionnel)"
+              style={{backgroundColor: "white", marginTop: 40, height: 42}}
+              value={PSYCode}
+              onChangeText={(PSYCode) => setPSYCode(PSYCode)}
+              mode="outlined"
+          />
+
+          <TouchableOpacity
+              style={styles.button}
+              onPress={sendForm}
+              underlayColor="red"
           >
-            Inscription
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+            <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Avenir-demi",
+                  color: "white",
+                }}
+            >
+              Inscription
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
   );
 }
 

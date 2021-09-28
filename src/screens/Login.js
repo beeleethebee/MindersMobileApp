@@ -1,144 +1,108 @@
 import * as React from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Dimensions } from "react-native";
-var width = Dimensions.get("window").width;
+import {useEffect} from "react";
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { SignIn } from "../../API";
-import { TextInput } from "react-native-paper";
-import { useEffect } from "react";
+import {SignIn} from "../api/API";
+import {TextInput} from "react-native-paper";
+import {ErrorToast, SuccessToast} from "../components/Toats";
 
-export default function Login({ navigation }) {
-  const [mail, setMail] = React.useState("");
+const  { width } = Dimensions.get("window");
+
+export default function Login({navigation}) {
+  const [email, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isLog, setIsLog] = React.useState(false);
 
   useEffect(() => {
-    if (isLog) navigation.navigate("Accueil");
+    if (isLog) {
+      navigation.navigate("Accueil");
+    }
   }, [isLog]);
 
   const sendForm = async () => {
-    if (!mail || !password)
-      return Toast.show({
-        type: "error",
-        position: "top",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 55,
-        bottomOffset: 40,
-        text1: "Erreur",
-        text2: "Il ne manquerai pas quelque chose ? 🤔",
-      });
-    const data = { email: mail, password: password };
+    if (!email || !password) {
+      return Toast.show({ ...ErrorToast, text2: "Il ne manquerai pas quelque chose ? 🤔"  });
+    }
+    const data = { email, password };
 
     SignIn(data)
-      .then(() => {
-        Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Binevenue,",
-          text2: "Content de te voir 🤗",
+        .then(() => {
+          Toast.show({ ...SuccessToast, text1: "Bienvenue,", text2: "Content de te voir 🤗" });
+          setIsLog(true);
+          navigation.navigate("Accueil");
+        })
+        .catch((error) => {
+          let textError = error.response.status === 401 ?
+              "Mauvais identifiants ☹️": "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟";
+          return Toast.show({ ...ErrorToast, text2: textError });
         });
-        setIsLog(true);
-        navigation.navigate("Accueil");
-      })
-      .catch((error) => {
-        let textError =
-          "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟";
-        if (error.response.status === 401)
-          textError = "Mauvais identifiants ☹️";
-        return Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Erreur",
-          text2: textError,
-        });
-      });
   };
 
   return (
-    <ScrollView
-      style={{
-        width: width,
-        backgroundColor: "white",
-        flex: 1,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: 45,
-          paddingRight: 45,
-          paddingTop: 60,
-          paddingBottom: 60,
-        }}
+      <ScrollView
+          style={{
+            width: width,
+            backgroundColor: "white",
+            flex: 1,
+          }}
       >
-        <Image style={styles.illustration} source={Illustration} />
-        <Text style={styles.welcome}>Bienvenue,</Text>
-        <Text style={styles.tinyText}>Connectez-vous pour continuer</Text>
-
-        <TextInput
-          label="Email"
-          style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
-          value={mail}
-          onChangeText={(mail) => setMail(mail)}
-          mode="outlined"
-        />
-
-        <TextInput
-          label="Mot de passe"
-          secureTextEntry={true}
-          style={{ backgroundColor: "white", marginTop: 15, height: 42 }}
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-          mode="outlined"
-        />
-        <Text
-          style={[
-            {
-              fontSize: 12,
-              fontFamily: "Avenir-demi",
-              color: "#011234",
-              width: "100%",
-              textAlign: "right",
-              marginTop: 10,
-            },
-          ]}
+        <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              paddingLeft: 45,
+              paddingRight: 45,
+              paddingTop: 60,
+              paddingBottom: 60,
+            }}
         >
-          Mot de passe oublié ?
-        </Text>
+          <Image style={styles.illustration} source={Illustration}/>
+          <Text style={styles.welcome}>Bienvenue,</Text>
+          <Text style={styles.tinyText}>Connectez-vous pour continuer</Text>
 
-        <TouchableOpacity style={styles.button} onPress={sendForm}>
+          <TextInput
+              label="Email"
+              style={{backgroundColor: "white", marginTop: 40, height: 42}}
+              value={email}
+              onChangeText={(email) => setMail(email)}
+              mode="outlined"
+          />
+
+          <TextInput
+              label="Mot de passe"
+              secureTextEntry={true}
+              style={{backgroundColor: "white", marginTop: 15, height: 42}}
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+              mode="outlined"
+          />
           <Text
-            style={[
-              {
-                fontSize: 16,
+              style={{
+                fontSize: 12,
                 fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+                color: "#011234",
+                width: "100%",
+                textAlign: "right",
+                marginTop: 10,
+              }}
           >
-            Connexion
+            Mot de passe oublié ?
           </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+
+          <TouchableOpacity style={styles.button} onPress={sendForm}>
+            <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Avenir-demi",
+                  color: "white",
+                }}
+            >
+              Connexion
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
   );
 }
 

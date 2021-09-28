@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { BottomPopup } from "../components/BottomPopUp";
+import React, {useEffect, useState} from "react";
+import {BottomPopup} from "../components/BottomPopUp";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput, Chip } from "react-native-paper";
-import { postEntries, putEntries } from "../../API";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {Chip, TextInput} from "react-native-paper";
+import {postEntries, putEntries} from "../api/API";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import moment from "moment-timezone";
 import PopUPNewCategory from "./PopUpNewCategory";
 
@@ -11,13 +11,7 @@ moment.tz.setDefault("Europe/Paris");
 moment().locale("fr");
 
 export default function PopUPNewEntry({
-  show,
-  setShow,
-  onClosePopup,
-  getEntries,
-  entryToEdit,
-  categories,
-  setCategories,
+  show, setShow, onClosePopup, getEntries, entryToEdit, categories, setCategories,
 }) {
   const [context, setContext] = useState("");
   const [location, setLocation] = useState("");
@@ -30,19 +24,14 @@ export default function PopUPNewEntry({
     setContext(entryToEdit ? entryToEdit.context : "");
     setLocation(entryToEdit ? entryToEdit.location : "");
     setDate(entryToEdit ? moment(entryToEdit.time).unix() : new Date());
-    let date = null;
-    let month = null;
-    let year = null;
-    let hour = null;
-    let minute = null;
+    let date, month, year, hour, minute;
     if (entryToEdit) {
       date = moment(entryToEdit.time).format("DD");
       month = moment(entryToEdit.time).format("MM");
       year = moment(entryToEdit.time).format("YYYY");
       hour = entryToEdit.time.split("T")[1].split(":")[0];
       minute = moment(entryToEdit.time).format("mm");
-      let dateTime = new Date(date, month, year, hour, minute);
-      setDate(dateTime);
+      setDate(new Date(date, month, year, hour, minute));
       setTagID(entryToEdit.categories.map((x) => x.id));
     }
   }, [entryToEdit]);
@@ -94,113 +83,111 @@ export default function PopUPNewEntry({
   };
 
   return (
-    <BottomPopup
-      onClose={() => {
-        setShow(false);
-      }}
-      show={show}
-      title="Expliquez nous"
-      onTouchOutside={onClosePopup}
-      body={
+      <BottomPopup
+          onClose={() => {
+            setShow(false);
+          }}
+          show={show}
+          title="Expliquez nous"
+          onTouchOutside={onClosePopup}
+      >
         <View>
           <Text style={styles.title}>Il était quelle heure ?</Text>
+          {/* wont work in Android */}
           <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={"hour"}
-            is24Hour
-            display="default"
-            style={{ marginTop: 5 }}
-            onChange={onChange}
+              testID="dateTimePicker"
+              value={date}
+              mode={"hour"}
+              is24Hour
+              display="default"
+              style={{marginTop: 5}}
+              onChange={onChange}
           />
           <Text style={styles.title}>Où étiez-vous ?</Text>
           <TextInput
-            onChangeText={(value) => {
-              setLocation(value);
-            }}
-            value={location}
-            placeholder="Ex : Chez de la famille"
-            style={{ backgroundColor: "white", height: 42 }}
-            mode="outlined"
+              value={location}
+              placeholder="Ex : Chez de la famille"
+              style={{backgroundColor: "white", height: 42}}
+              mode="outlined"
+              onChangeText={(value) => {
+                setLocation(value);
+              }}
           />
           <Text style={styles.title}>Que s’est-il passé ?</Text>
           <TextInput
-            onChangeText={(value) => {
-              setContext(value);
-            }}
-            value={context}
-            placeholder="Ex: Déjeuner de famille chez mamie.."
-            style={{
-              backgroundColor: "white",
-            }}
-            mode="outlined"
-            multiline
+              value={context}
+              placeholder="Ex: Déjeuner de famille chez mamie.."
+              mode="outlined"
+              multiline
+              style={{
+                backgroundColor: "white",
+              }}
+              onChangeText={(value) => {
+                setContext(value);
+              }}
           />
           <Text style={styles.title}>
             Si vous deviez catégoriser vos humeurs et émotions, où
             classeriez-vous celle-ci ?
           </Text>
           <View
-            style={{
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-            }}
+              style={{
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}
           >
             {categories.map((category, i) => (
-              <Chip
-                key={i}
-                style={styles.chip}
-                selected={tagID.includes(category.id)}
-                textStyle={styles.chipText}
-                selectedColor={"purple"}
-                onPress={() => {
-                  manageCategory(category);
-                }}
-              >
-                {category.name}
-              </Chip>
+                <Chip
+                    key={i}
+                    style={styles.chip}
+                    selected={tagID.includes(category.id)}
+                    textStyle={styles.chipText}
+                    selectedColor={"purple"}
+                    onPress={() => {
+                      manageCategory(category);
+                    }}
+                >
+                  {category.name}
+                </Chip>
             ))}
 
             <Chip
-              style={styles.chip}
-              textStyle={styles.chipText}
-              onPress={() => setShowCreateNewCategory(true)}
+                style={styles.chip}
+                textStyle={styles.chipText}
+                onPress={() => setShowCreateNewCategory(true)}
             >
               +
             </Chip>
           </View>
           <TouchableOpacity
-            onPress={() => {
-              entryToEdit ? changeEntry() : newEntry();
-            }}
-            style={styles.button}
+              onPress={() => {
+                entryToEdit ? changeEntry() : newEntry();
+              }}
+              style={styles.button}
           >
             <Text
-              style={[
-                {
+                style={{
                   fontSize: 16,
                   fontFamily: "Avenir-demi",
                   color: "white",
-                },
-              ]}
+                }}
             >
               Ajouter
             </Text>
           </TouchableOpacity>
           <PopUPNewCategory
-            categories={categories}
-            setCategories={setCategories}
-            show={showCreateNewCategory}
-            setShow={setShowCreateNewCategory}
-            onClosePopup={() => {
-              setShowCreateNewCategory(false);
-            }}
+              categories={categories}
+              setCategories={setCategories}
+              show={showCreateNewCategory}
+              setShow={setShowCreateNewCategory}
+              onClosePopup={() => {
+                setShowCreateNewCategory(false);
+              }}
           />
         </View>
-      }
-    />
+      </BottomPopup>
   );
 }
 const styles = StyleSheet.create({

@@ -1,27 +1,18 @@
 import PopUPNewEntry from "components/PopUPNewEntry";
-import React, { useState, useEffect } from "react";
-import { getEntries, deleteEntry, getCategories } from "../../API";
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React, {useEffect, useState} from "react";
+import {deleteEntry, getCategories, getEntries} from "../api/API";
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, FlatList} from "react-native";
 import moment from "moment";
+import {Entry} from "../components/Entry";
 
 export default function Home() {
   const [show, setShow] = useState(false);
   const [entryToEdit, setEntryToEdit] = useState(null);
-
   const [entries, setEntries] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const getCat = async () => {
     getCategories().then((data) => {
-      console.log(data);
       setCategories(data);
     });
   };
@@ -35,7 +26,7 @@ export default function Home() {
   };
 
   const deleteRow = async (id) => {
-    deleteEntry(id).then((data) => {
+    deleteEntry(id).then(() => {
       getValues();
     });
   };
@@ -47,95 +38,39 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getValues();
-    getCat();
+    getValues().then();
+    getCat().then();
   }, []);
 
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.container}>
-        {entries.map((entry, i) => {
-          const hour = entry.time
-            .split("T")[1]
-            .split(":")
-            .slice(0, 2)
-            .join(":");
-
-          return (
-            <View style={styles.card} key={i}>
-              <Text>{entry.context}</Text>
-              <Text>{entry.location}</Text>
-              <Text>
-                {moment(entry.time).format("DD/MM/YYYY [at] ") + hour}
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  deleteRow(entry.id);
+      <>
+        <StatusBar barStyle="dark-content"/>
+        <ScrollView style={styles.container}>
+          { entries.map((entry, i) => (<Entry entry={entry} key={i} setEntryToEdit={setEntryToEdit} setShow={setShow} deleteRow={deleteRow} />))}
+        </ScrollView>
+        <SafeAreaView style={styles.container}>
+          <TouchableOpacity style={styles.button} onPress={onShowPopup}>
+            <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Avenir-demi",
+                  color: "white",
                 }}
-              >
-                <Text
-                  style={[
-                    {
-                      fontSize: 16,
-                      fontFamily: "Avenir-demi",
-                      color: "white",
-                    },
-                  ]}
-                >
-                  Supprimer
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setEntryToEdit(entry);
-                  setShow(true);
-                }}
-              >
-                <Text
-                  style={[
-                    {
-                      fontSize: 16,
-                      fontFamily: "Avenir-demi",
-                      color: "white",
-                    },
-                  ]}
-                >
-                  Modifier
-                </Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </ScrollView>
-
-      <SafeAreaView style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={onShowPopup}>
-          <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
-          >
-            Ajouter
-          </Text>
-        </TouchableOpacity>
-        <PopUPNewEntry
-          setCategories={setCategories}
-          categories={categories}
-          getEntries={getValues}
-          show={show}
-          setShow={setShow}
-          entryToEdit={entryToEdit}
-          onClosePopup={onClosePopup}
-        />
-      </SafeAreaView>
-    </>
+            >
+              Ajouter
+            </Text>
+          </TouchableOpacity>
+          <PopUPNewEntry
+              setCategories={setCategories}
+              categories={categories}
+              getEntries={getValues}
+              show={show}
+              setShow={setShow}
+              entryToEdit={entryToEdit}
+              onClosePopup={onClosePopup}
+          />
+        </SafeAreaView>
+      </>
   );
 }
 

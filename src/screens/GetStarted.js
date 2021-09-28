@@ -1,78 +1,72 @@
-import React, { useEffect } from "react";
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React, {useEffect} from "react";
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import Illustration from "assets/images/illustrations/cloud.png";
 import Wave from "assets/images/shapes/wave.png";
-import { Dimensions } from "react-native";
 import colors from "assets/design/colors";
-import { validateToken } from "../../API.js";
-var width = Dimensions.get("window").width;
+import {validateToken} from "../api/API.js";
 
-export default function GetStarted({ navigation }) {
+const { width } = Dimensions.get("window");
+
+export default function GetStarted({navigation}) {
   useEffect(() => {
     validateToken().then((isLogged) => {
-      console.log(isLogged, "baba");
-      if (isLogged) navigation.navigate("Accueil");
+      if (isLogged) {
+        navigation.navigate("Accueil");
+      }
     });
   }, []);
 
   return (
-    <ScrollView
-      style={{
-        backgroundColor: "white",
-        flex: 1,
-      }}
-      contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
-    >
-      <View style={styles.container}>
-        <Image style={styles.illustration} source={Illustration} />
-        <Text style={[styles.textTop, colors.textAccent]}>
-          Bienvenue sur Minders,
-        </Text>
-        <Text style={[styles.textBot, colors.textGrey]}>
-          l'application qui vous guide et prend soin de vous ☁ 🤗
-        </Text>
-      </View>
-      <View>
-        <Image style={styles.wave} source={Wave} />
-        <View style={[colors.backgroundPrimary100, styles.bottomView]}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Inscription")}
-            underlayColor="violet"
-          >
-            <Text
-              style={[
-                colors.textPrimary100,
-                { fontSize: 16, fontFamily: "Avenir-demi" },
-              ]}
-            >
-              Commencer l’aventure
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Connexion")}
-            underlayColor="violet"
-            style={{ marginTop: 30 }}
-          >
-            <Text
-              style={[
-                colors.textWhite,
-                { fontSize: 16, fontFamily: "Avenir-demi" },
-              ]}
-            >
-              Se connecter
-            </Text>
-          </TouchableOpacity>
+      <ScrollView
+          style={{
+            backgroundColor: "white",
+            flex: 1,
+          }}
+          contentContainerStyle={{flexGrow: 1, justifyContent: "space-between"}}
+      >
+        <View style={styles.container}>
+          <Image style={styles.illustration} source={Illustration}/>
+          <Text style={[styles.textTop, colors.textAccent]}>
+            Bienvenue sur Minders,
+          </Text>
+          <Text style={[styles.textBot, colors.textGrey]}>
+            l'application qui vous guide et prend soin de vous ☁ 🤗
+          </Text>
         </View>
-      </View>
-    </ScrollView>
+        <View>
+          <Image style={styles.wave} source={Wave}/>
+          <View style={{...colors.backgroundPrimary100, ...styles.bottomView}}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate("Inscription")}
+                underlayColor="violet"
+            >
+              <Text
+                  style={{
+                    ...colors.textPrimary100,
+                    fontSize: 16, fontFamily: "Avenir-demi",
+                  }}
+              >
+                Commencer l’aventure
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("Connexion")}
+                underlayColor="violet"
+                style={{marginTop: 30}}
+            >
+              <Text
+                  style={{
+                    ...colors.textWhite,
+                  fontSize: 16, fontFamily: "Avenir-demi",
+                  }}
+              >
+                Se connecter
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
   );
 }
 

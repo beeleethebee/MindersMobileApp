@@ -1,96 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { BottomPopup } from "./BottomPopUp";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput } from "react-native-paper";
-import { Chip } from "react-native-paper";
-import { newCategory, postEntries, putEntries } from "../../API";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, {useState} from "react";
+import {BottomPopup} from "./BottomPopUp";
+import {TextInput} from "react-native-paper";
+import {newCategory} from "../api/API";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Toast from "react-native-toast-message";
 import moment from "moment-timezone";
+import {ErrorToast, SuccessToast} from "./Toats";
 
 moment.tz.setDefault("Europe/Paris");
 moment().locale("fr");
 
 export default function PopUPNewCategory({
-  show,
-  setShow,
-  onClosePopup,
-  categories,
-  setCategories,
+  show, setShow, onClosePopup, categories, setCategories,
 }) {
   const [name, setName] = useState("");
 
   const createCategory = async () => {
-    newCategory({ name: name })
-      .then((data) => {
-        setCategories([...categories, { id: -5, name: name }]);
-        Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Catégorie créée avec succès !",
+    newCategory({name: name})
+        .then((data) => {
+          setCategories([...categories, {id: -5, name: name}]);
+          Toast.show({
+            ...SuccessToast,
+            text1: "Catégorie créée avec succès !",
+          });
+        })
+        .catch((error) => {
+          Toast.show({
+            ...ErrorToast,
+            text1: "Une erreur s'est produite..",
+            text2: "Nous nous excusons, veuillez réessayer plus tard..",
+          });
         });
-      })
-      .catch((error) => {
-        Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Une erreur s'est produite..",
-          text2: "Nous nous excusons, veuillez réessayer plus tard..",
-        });
-      });
   };
 
   return (
-    <BottomPopup
-      onClose={() => {
-        setShow(false);
-      }}
-      show={show}
-      title="Création d'une nouvelle catégorie"
-      onTouchOutside={onClosePopup}
-      body={
+      <BottomPopup
+          onClose={() => {
+            setShow(false);
+          }}
+          show={show}
+          title="Création d'une nouvelle catégorie"
+          onTouchOutside={onClosePopup}
+      >
         <View>
           <Text style={styles.title}>Nom de votre catégorie</Text>
 
           <TextInput
-            onChangeText={(value) => {
-              setName(value);
-            }}
-            value={name}
-            placeholder="Ex : Addictions"
-            style={{ backgroundColor: "white", height: 42 }}
-            mode="outlined"
+              onChangeText={(value) => {
+                setName(value);
+              }}
+              value={name}
+              placeholder="Ex : Addictions"
+              style={{backgroundColor: "white", height: 42}}
+              mode="outlined"
           />
           <TouchableOpacity
-            onPress={() => {
-              if (name) createCategory();
-              onClosePopup();
-            }}
-            style={styles.button}
+              onPress={() => {
+                if (name) {
+                  createCategory().then();
+                }
+                onClosePopup();
+              }}
+              style={styles.button}
           >
             <Text
-              style={[
-                {
-                  fontSize: 16,
-                  fontFamily: "Avenir-demi",
-                  color: "white",
-                },
-              ]}
+                style={[
+                  {
+                    fontSize: 16,
+                    fontFamily: "Avenir-demi",
+                    color: "white",
+                  },
+                ]}
             >
               Créer
             </Text>
           </TouchableOpacity>
         </View>
-      }
-    />
+      </BottomPopup>
   );
 }
 const styles = StyleSheet.create({
