@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {BottomPopup} from "./BottomPopUp";
+import {BottomPopUp} from "./BottomPopUp";
 import {TextInput} from "react-native-paper";
 import {newCategory} from "../api/API";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
@@ -34,7 +34,7 @@ export default function PopUPNewCategory({
   };
 
   return (
-      <BottomPopup
+      <BottomPopUp
           onClose={() => {
             setShow(false);
           }}
@@ -76,7 +76,7 @@ export default function PopUPNewCategory({
             </Text>
           </TouchableOpacity>
         </View>
-      </BottomPopup>
+      </BottomPopUp>
   );
 }
 const styles = StyleSheet.create({

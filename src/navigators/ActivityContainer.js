@@ -11,6 +11,7 @@ export default function Nav() {
           activeColor="#7E85F9"
           inactiveColor="#CBCEFD"
           barStyle={{backgroundColor: "#ECEDFF"}}
+
       >
         <Tab.Screen name="Mon journal" component={Home}/>
         <Tab.Screen name="Lier un professionnel" component={Scanner}/>

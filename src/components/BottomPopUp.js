@@ -4,7 +4,7 @@ import {ScrollView} from "react-native-gesture-handler";
 
 const deviceHeight = Dimensions.get("window").height;
 
-export function BottomPopup({
+export function BottomPopUp({
   title, children, onTouchOutside, show, onClose,
 }) {
   const renderOutsideTouchable = (onTouch) => {
@@ -66,7 +66,7 @@ export function BottomPopup({
               }}
           >
             {renderTitle()}
-            {body}
+            {children}
           </ScrollView>
         </View>
       </Modal>

@@ -1,4 +1,4 @@
-import PopUPNewEntry from "components/PopUPNewEntry";
+import PopUPNewEntry from "components/PopUpNewEntry";
 import React, {useEffect, useState} from "react";
 import {deleteEntry, getCategories, getEntries} from "../api/API";
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, FlatList} from "react-native";
@@ -43,11 +43,28 @@ export default function Home() {
   }, []);
 
   return (
-      <>
+      <SafeAreaView style={{flex: 1}}>
         <StatusBar barStyle="dark-content"/>
-        <ScrollView style={styles.container}>
-          { entries.map((entry, i) => (<Entry entry={entry} key={i} setEntryToEdit={setEntryToEdit} setShow={setShow} deleteRow={deleteRow} />))}
-        </ScrollView>
+        <Text style={{
+          fontSize: 26,
+          textAlign: 'center',
+          fontFamily: "Avenir-demi",
+          marginTop: 10,
+        }}>
+          Accueil
+        </Text>
+        <FlatList
+            data={entries}
+            style={styles.container}
+            renderItem={(({item}) => (
+                <Entry entry={item}
+                       setEntryToEdit={setEntryToEdit}
+                       setShow={setShow}
+                       deleteRow={deleteRow}
+                />
+            ))}
+            keyExtractor={item => item.id}
+        />
         <SafeAreaView style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={onShowPopup}>
             <Text
@@ -70,7 +87,7 @@ export default function Home() {
               onClosePopup={onClosePopup}
           />
         </SafeAreaView>
-      </>
+      </SafeAreaView>
   );
 }
 
@@ -92,21 +109,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 8,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#0E151C",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    marginTop: 10,
-    marginBottom: 10,
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 8,
-    borderRadius: 4,
-    padding: 15,
   },
   container: {
     padding: 20,

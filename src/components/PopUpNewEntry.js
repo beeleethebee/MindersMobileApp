@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {BottomPopup} from "../components/BottomPopUp";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {Chip, TextInput} from "react-native-paper";
 import {postEntries, putEntries} from "../api/API";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import moment from "moment-timezone";
 import PopUPNewCategory from "./PopUpNewCategory";
+import {BottomPopUp} from "./BottomPopUp";
 
 moment.tz.setDefault("Europe/Paris");
 moment().locale("fr");
 
-export default function PopUPNewEntry({
+export default function PopUpNewEntry({
   show, setShow, onClosePopup, getEntries, entryToEdit, categories, setCategories,
 }) {
   const [context, setContext] = useState("");
@@ -83,7 +83,7 @@ export default function PopUPNewEntry({
   };
 
   return (
-      <BottomPopup
+      <BottomPopUp
           onClose={() => {
             setShow(false);
           }}
@@ -187,7 +187,7 @@ export default function PopUPNewEntry({
               }}
           />
         </View>
-      </BottomPopup>
+      </BottomPopUp>
   );
 }
 const styles = StyleSheet.create({
