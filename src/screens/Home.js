@@ -1,9 +1,15 @@
 import PopUPNewEntry from "components/PopUpNewEntry";
-import React, {useEffect, useState} from "react";
-import {deleteEntry, getCategories, getEntries} from "../api/API";
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, FlatList} from "react-native";
-import moment from "moment";
-import {Entry} from "../components/Entry";
+import React, { useEffect, useState } from "react";
+import { deleteEntry, getCategories, getEntries } from "../api/API";
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { Entry } from "../components/Entry";
 
 export default function Home() {
   const [show, setShow] = useState(false);
@@ -11,30 +17,23 @@ export default function Home() {
   const [entries, setEntries] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const getCat = async () => {
-    getCategories().then((data) => {
-      setCategories(data);
-    });
-  };
+  const onClosePopup = () => setShow(false);
 
   const onShowPopup = () => {
+    setEntryToEdit(null);
     setShow(true);
   };
 
-  const onClosePopup = () => {
-    setShow(false);
+  const getCat = async () => {
+    getCategories().then((data) => setCategories(data));
   };
 
   const deleteRow = async (id) => {
-    deleteEntry(id).then(() => {
-      getValues();
-    });
+    deleteEntry(id).then(() => getValues());
   };
 
   const getValues = async () => {
-    getEntries().then((data) => {
-      setEntries(data.reverse());
-    });
+    getEntries().then((data) => setEntries(data.reverse()));
   };
 
   useEffect(() => {
@@ -43,51 +42,54 @@ export default function Home() {
   }, []);
 
   return (
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar barStyle="dark-content"/>
-        <Text style={{
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" />
+      <Text
+        style={{
           fontSize: 26,
-          textAlign: 'center',
+          textAlign: "center",
           fontFamily: "Avenir-demi",
           marginTop: 10,
-        }}>
-          Accueil
-        </Text>
-        <FlatList
-            data={entries}
-            style={styles.container}
-            renderItem={(({item}) => (
-                <Entry entry={item}
-                       setEntryToEdit={setEntryToEdit}
-                       setShow={setShow}
-                       deleteRow={deleteRow}
-                />
-            ))}
-            keyExtractor={item => item.id}
-        />
-        <SafeAreaView style={styles.container}>
-          <TouchableOpacity style={styles.button} onPress={onShowPopup}>
-            <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Avenir-demi",
-                  color: "white",
-                }}
-            >
-              Ajouter
-            </Text>
-          </TouchableOpacity>
-          <PopUPNewEntry
-              setCategories={setCategories}
-              categories={categories}
-              getEntries={getValues}
-              show={show}
-              setShow={setShow}
-              entryToEdit={entryToEdit}
-              onClosePopup={onClosePopup}
+        }}
+      >
+        Accueil
+      </Text>
+      <FlatList
+        data={entries}
+        style={styles.container}
+        renderItem={({ item }) => (
+          <Entry
+            entry={item}
+            setEntryToEdit={setEntryToEdit}
+            setShow={setShow}
+            deleteRow={deleteRow}
           />
-        </SafeAreaView>
+        )}
+        keyExtractor={(item) => item.id}
+      />
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={onShowPopup}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Avenir-demi",
+              color: "white",
+            }}
+          >
+            Ajouter
+          </Text>
+        </TouchableOpacity>
+        <PopUPNewEntry
+          setCategories={setCategories}
+          categories={categories}
+          getEntries={getValues}
+          show={show}
+          setShow={setShow}
+          entryToEdit={entryToEdit}
+          onClosePopup={onClosePopup}
+        />
       </SafeAreaView>
+    </SafeAreaView>
   );
 }
 

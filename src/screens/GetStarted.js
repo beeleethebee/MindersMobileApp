@@ -1,72 +1,75 @@
-import React, {useEffect} from "react";
-import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
+import React from "react";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Illustration from "assets/images/illustrations/cloud.png";
 import Wave from "assets/images/shapes/wave.png";
 import colors from "assets/design/colors";
-import {validateToken} from "../api/API.js";
 
 const { width } = Dimensions.get("window");
 
-export default function GetStarted({navigation}) {
-  useEffect(() => {
-    validateToken().then((isLogged) => {
-      if (isLogged) {
-        navigation.navigate("Accueil");
-      }
-    });
-  }, []);
+export default function GetStarted({ navigation }) {
+  // TODO : Faire un système d'auth automatique quand on se rappelle de l'utilisateur connecté
 
   return (
-      <ScrollView
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-          }}
-          contentContainerStyle={{flexGrow: 1, justifyContent: "space-between"}}
-      >
-        <View style={styles.container}>
-          <Image style={styles.illustration} source={Illustration}/>
-          <Text style={[styles.textTop, colors.textAccent]}>
-            Bienvenue sur Minders,
-          </Text>
-          <Text style={[styles.textBot, colors.textGrey]}>
-            l'application qui vous guide et prend soin de vous ☁ 🤗
-          </Text>
-        </View>
-        <View>
-          <Image style={styles.wave} source={Wave}/>
-          <View style={{...colors.backgroundPrimary100, ...styles.bottomView}}>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("Inscription")}
-                underlayColor="violet"
+    <ScrollView
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+      }}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
+    >
+      <View style={styles.container}>
+        <Image style={styles.illustration} source={Illustration} />
+        <Text style={[styles.textTop, colors.textAccent]}>
+          Bienvenue sur Minders,
+        </Text>
+        <Text style={[styles.textBot, colors.textGrey]}>
+          l'application qui vous guide et prend soin de vous ☁ 🤗
+        </Text>
+      </View>
+      <View>
+        <Image style={styles.wave} source={Wave} />
+        <View style={{ ...colors.backgroundPrimary100, ...styles.bottomView }}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Inscription")}
+            underlayColor="violet"
+          >
+            <Text
+              style={{
+                ...colors.textPrimary100,
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+              }}
             >
-              <Text
-                  style={{
-                    ...colors.textPrimary100,
-                    fontSize: 16, fontFamily: "Avenir-demi",
-                  }}
-              >
-                Commencer l’aventure
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("Connexion")}
-                underlayColor="violet"
-                style={{marginTop: 30}}
+              Commencer l’aventure
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Connexion")}
+            underlayColor="violet"
+            style={{ marginTop: 30 }}
+          >
+            <Text
+              style={{
+                ...colors.textWhite,
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+              }}
             >
-              <Text
-                  style={{
-                    ...colors.textWhite,
-                  fontSize: 16, fontFamily: "Avenir-demi",
-                  }}
-              >
-                Se connecter
-              </Text>
-            </TouchableOpacity>
-          </View>
+              Se connecter
+            </Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
+    </ScrollView>
   );
 }
 

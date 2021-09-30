@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import moment from "moment";
 import React from "react";
 
@@ -36,70 +36,53 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 15,
   },
-
 });
 
+export function Entry({ entry, setEntryToEdit, setShow, deleteRow }) {
+  if (entry === undefined) return null;
 
-export function Entry({
-  entry, setEntryToEdit, setShow, deleteRow,
-}) {
-  if (entry === undefined) {
-    return null;
-  }
+  const { time, context, location, id } = entry;
 
-  const {
-    time,
-    context,
-    location,
-    id,
-  } = entry;
-
-  const hour = time
-      .split("T")[1]
-      .split(":")
-      .slice(0, 2)
-      .join(":");
+  const hour = time.split("T")[1].split(":").slice(0, 2).join(":");
 
   return (
-      <View style={styles.card}>
-        <Text>{context}</Text>
-        <Text>{location}</Text>
-        <Text>
-          {moment(time).format("DD/MM/YYYY [at] ") + hour}
+    <View style={styles.card}>
+      <Text>{context}</Text>
+      <Text>{location}</Text>
+      <Text>{moment(time).format("DD/MM/YYYY [at] ") + hour}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          deleteRow(id).then();
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Avenir-demi",
+            color: "white",
+          }}
+        >
+          Supprimer
         </Text>
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              deleteRow(id).then();
-            }}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          setEntryToEdit(entry);
+          setShow(true);
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Avenir-demi",
+            color: "white",
+          }}
         >
-          <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              }}
-          >
-            Supprimer
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setEntryToEdit(entry);
-              setShow(true);
-            }}
-        >
-          <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              }}
-          >
-            Modifier
-          </Text>
-        </TouchableOpacity>
-      </View>
+          Modifier
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
