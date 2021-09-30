@@ -1,126 +1,80 @@
-import PopUPNewEntry from "components/PopUPNewEntry";
-import React, { useState, useEffect } from "react";
-import { getEntries, deleteEntry, getCategories } from "../../API";
+import PopUPNewEntry from "components/PopUpNewEntry";
+import React, { useEffect, useState } from "react";
+import { deleteEntry, getCategories, getEntries } from "../api/API";
 import {
-  StyleSheet,
   SafeAreaView,
-  View,
   StatusBar,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
 } from "react-native";
-import moment from "moment";
+import { Entry } from "../components/Entry";
 
 export default function Home() {
   const [show, setShow] = useState(false);
   const [entryToEdit, setEntryToEdit] = useState(null);
-
   const [entries, setEntries] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const getCat = async () => {
-    getCategories().then((data) => {
-      console.log(data);
-      setCategories(data);
-    });
-  };
+  const onClosePopup = () => setShow(false);
 
   const onShowPopup = () => {
+    setEntryToEdit(null);
     setShow(true);
   };
 
-  const onClosePopup = () => {
-    setShow(false);
+  const getCat = async () => {
+    getCategories().then((data) => setCategories(data));
   };
 
   const deleteRow = async (id) => {
-    deleteEntry(id).then((data) => {
-      getValues();
-    });
+    deleteEntry(id).then(() => getValues());
   };
 
   const getValues = async () => {
-    getEntries().then((data) => {
-      setEntries(data.reverse());
-    });
+    getEntries().then((data) => setEntries(data.reverse()));
   };
 
   useEffect(() => {
-    getValues();
-    getCat();
+    getValues().then();
+    getCat().then();
   }, []);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.container}>
-        {entries.map((entry, i) => {
-          const hour = entry.time
-            .split("T")[1]
-            .split(":")
-            .slice(0, 2)
-            .join(":");
-
-          return (
-            <View style={styles.card} key={i}>
-              <Text>{entry.context}</Text>
-              <Text>{entry.location}</Text>
-              <Text>
-                {moment(entry.time).format("DD/MM/YYYY [at] ") + hour}
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  deleteRow(entry.id);
-                }}
-              >
-                <Text
-                  style={[
-                    {
-                      fontSize: 16,
-                      fontFamily: "Avenir-demi",
-                      color: "white",
-                    },
-                  ]}
-                >
-                  Supprimer
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setEntryToEdit(entry);
-                  setShow(true);
-                }}
-              >
-                <Text
-                  style={[
-                    {
-                      fontSize: 16,
-                      fontFamily: "Avenir-demi",
-                      color: "white",
-                    },
-                  ]}
-                >
-                  Modifier
-                </Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </ScrollView>
-
+      <Text
+        style={{
+          fontSize: 26,
+          textAlign: "center",
+          fontFamily: "Avenir-demi",
+          marginTop: 10,
+        }}
+      >
+        Accueil
+      </Text>
+      <FlatList
+        data={entries}
+        style={styles.container}
+        renderItem={({ item }) => (
+          <Entry
+            entry={item}
+            setEntryToEdit={setEntryToEdit}
+            setShow={setShow}
+            deleteRow={deleteRow}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
       <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={onShowPopup}>
           <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+            style={{
+              fontSize: 16,
+              fontFamily: "Avenir-demi",
+              color: "white",
+            }}
           >
             Ajouter
           </Text>
@@ -135,7 +89,7 @@ export default function Home() {
           onClosePopup={onClosePopup}
         />
       </SafeAreaView>
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -157,21 +111,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 8,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#0E151C",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    marginTop: 10,
-    marginBottom: 10,
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 8,
-    borderRadius: 4,
-    padding: 15,
   },
   container: {
     padding: 20,

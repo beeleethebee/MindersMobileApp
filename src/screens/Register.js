@@ -1,39 +1,33 @@
 import React from "react";
 import {
-  StyleSheet,
-  ScrollView,
+  Dimensions,
   Image,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Dimensions } from "react-native";
-var width = Dimensions.get("window").width;
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { Registration } from "../../API";
-
+import { Registration } from "../api/API";
 import { TextInput } from "react-native-paper";
+import { ErrorToast, SuccessToast } from "../components/Toats";
+const { width } = Dimensions.get("window");
 
 export default function Register({ navigation }) {
+  // States
   const [firstname, setFirstname] = React.useState("");
   const [lastname, setLastname] = React.useState("");
-
   const [mail, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
-
   const [PSYCode, setPSYCode] = React.useState("");
 
+  // Envoie les informations d'inscription à l'API
   const sendForm = async () => {
     if (!firstname || !lastname || !mail || !password)
       return Toast.show({
-        type: "error",
-        position: "top",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 55,
-        bottomOffset: 40,
-        text1: "Erreur",
+        ...ErrorToast,
         text2: "Veuillez vérifier vos informations ☁️",
       });
 
@@ -41,19 +35,14 @@ export default function Register({ navigation }) {
       first_name: firstname,
       last_name: lastname,
       email: mail,
-      password: password,
+      password,
       PSYCode: PSYCode,
     };
 
     Registration(data)
       .then(() => {
         Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
+          ...SuccessToast,
           text1: "Félicitations !",
           text2: "Bienvenue chez Minders ! 🤗",
         });
@@ -62,13 +51,7 @@ export default function Register({ navigation }) {
       .catch((error) => {
         console.log(error);
         return Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Erreur",
+          ...ErrorToast,
           text2:
             "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟",
         });
@@ -143,13 +126,11 @@ export default function Register({ navigation }) {
           underlayColor="red"
         >
           <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+            style={{
+              fontSize: 16,
+              fontFamily: "Avenir-demi",
+              color: "white",
+            }}
           >
             Inscription
           </Text>

@@ -75,7 +75,6 @@ export async function getCategories() {
 }
 
 export async function validateToken() {
-  console.log("BOUBOU");
   const header = await getHeader();
   let rep = {};
   await api

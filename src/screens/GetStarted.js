@@ -1,26 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  Text,
-  View,
+  Dimensions,
   Image,
-  StyleSheet,
-  TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Illustration from "assets/images/illustrations/cloud.png";
 import Wave from "assets/images/shapes/wave.png";
-import { Dimensions } from "react-native";
 import colors from "assets/design/colors";
-import { validateToken } from "../../API.js";
-var width = Dimensions.get("window").width;
+
+const { width } = Dimensions.get("window");
 
 export default function GetStarted({ navigation }) {
-  useEffect(() => {
-    validateToken().then((isLogged) => {
-      console.log(isLogged, "baba");
-      if (isLogged) navigation.navigate("Accueil");
-    });
-  }, []);
+  // TODO : Faire un système d'auth automatique quand on se rappelle de l'utilisateur connecté
 
   return (
     <ScrollView
@@ -41,17 +36,18 @@ export default function GetStarted({ navigation }) {
       </View>
       <View>
         <Image style={styles.wave} source={Wave} />
-        <View style={[colors.backgroundPrimary100, styles.bottomView]}>
+        <View style={{ ...colors.backgroundPrimary100, ...styles.bottomView }}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Inscription")}
             underlayColor="violet"
           >
             <Text
-              style={[
-                colors.textPrimary100,
-                { fontSize: 16, fontFamily: "Avenir-demi" },
-              ]}
+              style={{
+                ...colors.textPrimary100,
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+              }}
             >
               Commencer l’aventure
             </Text>
@@ -62,10 +58,11 @@ export default function GetStarted({ navigation }) {
             style={{ marginTop: 30 }}
           >
             <Text
-              style={[
-                colors.textWhite,
-                { fontSize: 16, fontFamily: "Avenir-demi" },
-              ]}
+              style={{
+                ...colors.textWhite,
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+              }}
             >
               Se connecter
             </Text>

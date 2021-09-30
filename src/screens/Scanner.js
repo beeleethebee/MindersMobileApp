@@ -1,16 +1,18 @@
 import {
-  Text,
+  SafeAreaView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
-  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { addTherapist, showTherapist } from "../../API";
+import { addTherapist, showTherapist } from "../api/API";
 import Toast from "react-native-toast-message";
+import { ErrorToast, SuccessToast } from "../components/Toats";
 
 function QrScanner() {
+  // States
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -26,54 +28,36 @@ function QrScanner() {
   const handleBarCodeScanned = async ({ data }) => {
     setScanned(true);
     setDataLoaded(true);
-    console.log("spec");
     showTherapist(data)
-      .then((data) => {
-        console.log(data, "oui");
-        setData(data);
-      })
-      .catch((error) => {
-        console.log(error, "ok");
-      });
+      .then((data) => setData(data))
+      .catch((error) => console.log(error));
   };
 
   const add = async () => {
-    console.log(data, "youhou");
     addTherapist(data.id)
-      .then((data) => {
+      .then(() => {
         setScanned(false);
         return Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
+          ...SuccessToast,
           text1: "Ajout de votre psychologue",
           text2: "Votre psychologue a été ajouté avec succès ! 😊",
         });
       })
-      .catch((error) => {
+      .catch(() => {
         return Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Erreur...",
+          ...ErrorToast,
           text2: "Un problème est survenu 😔",
         });
       });
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-  if (!scanned) {
+  if (hasPermission === null)
+    return <Text>Nous avons besoin de la permission</Text>;
+
+  if (hasPermission === false)
+    return <Text>Nous n'avons pas accès à la caméro</Text>;
+
+  if (!scanned)
     return (
       <View
         style={{
@@ -103,7 +87,6 @@ function QrScanner() {
         />
       </View>
     );
-  }
 
   if (!dataLoaded) return null;
 
@@ -130,13 +113,11 @@ function QrScanner() {
         >
           <TouchableOpacity onPress={add} style={styles.button}>
             <Text
-              style={[
-                {
-                  fontSize: 16,
-                  fontFamily: "Avenir-demi",
-                  color: "white",
-                },
-              ]}
+              style={{
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+                color: "white",
+              }}
             >
               Ajouter {data?.first_name} {data?.last_name}
             </Text>
@@ -146,13 +127,11 @@ function QrScanner() {
             style={styles.button2}
           >
             <Text
-              style={[
-                {
-                  fontSize: 16,
-                  fontFamily: "Avenir-demi",
-                  color: "#7E85F9",
-                },
-              ]}
+              style={{
+                fontSize: 16,
+                fontFamily: "Avenir-demi",
+                color: "#7E85F9",
+              }}
             >
               Scanner un autre psychologue
             </Text>

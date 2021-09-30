@@ -1,22 +1,24 @@
 import * as React from "react";
+import { useEffect } from "react";
 import {
-  StyleSheet,
-  ScrollView,
+  Dimensions,
   Image,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Dimensions } from "react-native";
-var width = Dimensions.get("window").width;
 import Illustration from "assets/images/illustrations/Minders.png";
 import Toast from "react-native-toast-message";
-import { SignIn } from "../../API";
+import { SignIn } from "../api/API";
 import { TextInput } from "react-native-paper";
-import { useEffect } from "react";
+import { ErrorToast, SuccessToast } from "../components/Toats";
+const { width } = Dimensions.get("window");
 
 export default function Login({ navigation }) {
-  const [mail, setMail] = React.useState("");
+  // States
+  const [email, setMail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isLog, setIsLog] = React.useState(false);
 
@@ -24,30 +26,21 @@ export default function Login({ navigation }) {
     if (isLog) navigation.navigate("Accueil");
   }, [isLog]);
 
+  // Permet d'envoyer à l'API la connexion utilisateur
   const sendForm = async () => {
-    if (!mail || !password)
+    if (!email || !password) {
       return Toast.show({
-        type: "error",
-        position: "top",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 55,
-        bottomOffset: 40,
-        text1: "Erreur",
+        ...ErrorToast,
         text2: "Il ne manquerai pas quelque chose ? 🤔",
       });
-    const data = { email: mail, password: password };
+    }
+    const data = { email, password };
 
     SignIn(data)
       .then(() => {
         Toast.show({
-          type: "success",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Binevenue,",
+          ...SuccessToast,
+          text1: "Bienvenue,",
           text2: "Content de te voir 🤗",
         });
         setIsLog(true);
@@ -55,19 +48,10 @@ export default function Login({ navigation }) {
       })
       .catch((error) => {
         let textError =
-          "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟";
-        if (error.response.status === 401)
-          textError = "Mauvais identifiants ☹️";
-        return Toast.show({
-          type: "error",
-          position: "top",
-          visibilityTime: 4000,
-          autoHide: true,
-          topOffset: 55,
-          bottomOffset: 40,
-          text1: "Erreur",
-          text2: textError,
-        });
+          error.response.status === 401
+            ? "Mauvais identifiants ☹️"
+            : "Il y a un petit soucis de notre côté .. Veuillez réessayer 😟";
+        return Toast.show({ ...ErrorToast, text2: textError });
       });
   };
 
@@ -96,8 +80,8 @@ export default function Login({ navigation }) {
         <TextInput
           label="Email"
           style={{ backgroundColor: "white", marginTop: 40, height: 42 }}
-          value={mail}
-          onChangeText={(mail) => setMail(mail)}
+          value={email}
+          onChangeText={(email) => setMail(email)}
           mode="outlined"
         />
 
@@ -110,29 +94,25 @@ export default function Login({ navigation }) {
           mode="outlined"
         />
         <Text
-          style={[
-            {
-              fontSize: 12,
-              fontFamily: "Avenir-demi",
-              color: "#011234",
-              width: "100%",
-              textAlign: "right",
-              marginTop: 10,
-            },
-          ]}
+          style={{
+            fontSize: 12,
+            fontFamily: "Avenir-demi",
+            color: "#011234",
+            width: "100%",
+            textAlign: "right",
+            marginTop: 10,
+          }}
         >
           Mot de passe oublié ?
         </Text>
 
         <TouchableOpacity style={styles.button} onPress={sendForm}>
           <Text
-            style={[
-              {
-                fontSize: 16,
-                fontFamily: "Avenir-demi",
-                color: "white",
-              },
-            ]}
+            style={{
+              fontSize: 16,
+              fontFamily: "Avenir-demi",
+              color: "white",
+            }}
           >
             Connexion
           </Text>
