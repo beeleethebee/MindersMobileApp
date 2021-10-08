@@ -100,6 +100,7 @@ export async function getEntries() {
   await api.get("entries", header).then((response) => {
     rep = response.data;
   });
+  console.log(rep)
   return rep;
 }
 

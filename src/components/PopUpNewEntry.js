@@ -74,6 +74,7 @@ export default function PopUpNewEntry({
   };
 
   const manageCategory = (category) => {
+    console.log(category)
     if (tagID.includes(category.id)) {
       const tagIDCopy = [...tagID];
       const index = tagIDCopy.indexOf(category.id);

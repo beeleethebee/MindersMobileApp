@@ -18,7 +18,8 @@ export default function PopUPNewCategory({
   const createCategory = async () => {
     newCategory({name: name})
         .then((data) => {
-          setCategories([...categories, {id: -5, name: name}]);
+          const { id } = data;
+          setCategories([...categories, {id, name}]);
           Toast.show({
             ...SuccessToast,
             text1: "Catégorie créée avec succès !",
